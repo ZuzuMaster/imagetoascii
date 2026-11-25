@@ -4,6 +4,7 @@ import cv2
 import tkinter as tk
 from tkinter import filedialog
 import numpy as np
+from PIL import Image, ImageDraw, ImageFont
 
 # Hide the main tkinter window so only the file dialog shows
 root = tk.Tk()
@@ -11,7 +12,7 @@ root.withdraw()
 
 # Ask the user to pick an image
 image_path = filedialog.askopenfilename(
-    title="Select an Image for Head Counting",
+    title="Select an Image for Translating",
     filetypes=[("Image Files", "*.jpg *.jpeg *.png *.bmp *.webp")]
 )
 root.destroy()
@@ -53,6 +54,35 @@ for k in brights:
     else:
         line += characters[k]
 
-# Finally, print full image
-for l in lines:
-    print(l)
+# --- RENDER AS AN IMAGE INSTEAD OF PRINTING ---
+
+# Combine all lines into a single text block
+text_content = "\n".join(lines)
+
+# Set font size (you can adjust this if needed)
+font_size = 14
+try:
+    # Try to load a clean monospaced font
+    font = ImageFont.truetype("consola.ttf", font_size)
+except IOError:
+    font = ImageFont.load_default()
+
+# Calculate text block dimensions
+dummy_img = Image.new("RGB", (1, 1))
+draw = ImageDraw.Draw(dummy_img)
+bbox = draw.multiline_textbbox((0, 0), text_content, font=font)
+img_width = bbox[2] + 30
+img_height = bbox[3] + 30
+
+# Create the final output image with a dark background
+output_image = Image.new("RGB", (img_width, img_height), color=(15, 15, 15))
+draw = ImageDraw.Draw(output_image)
+
+# Draw the ASCII text onto the image (white text)
+draw.text((15, 15), text_content, fill=(240, 240, 240), font=font)
+
+# Save and display the resulting image
+output_path = "ascii_art_output.png"
+output_image.save(output_path)
+print(f"Success! Image saved as '{output_path}'")
+output_image.show()
