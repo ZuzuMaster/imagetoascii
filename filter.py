@@ -3,6 +3,7 @@ import sys
 import cv2
 import tkinter as tk
 from tkinter import filedialog
+import numpy as np
 
 # Hide the main tkinter window so only the file dialog shows
 root = tk.Tk()
