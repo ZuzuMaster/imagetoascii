@@ -38,16 +38,16 @@ brights = []
 for i in range(height):
     for j in range(width):
         brights.append(img[i, j])
-    brights.append(10)
+    brights.append(4)
 
-brights = [10 if x == 10 else round((x / 255) * 9) for x in brights]
+brights = [4 if x == 4 else round((x / 255) * 3) for x in brights]
 
 # Create ASCII art using brightnesses for each char
-characters = [' ', '.', ':', '-', '=', '+', '*', '#', '%', '@']
+characters = ['░', '▒', '▓', '█']
 lines = []
 line = ""
 for k in brights:
-    if k == 10:
+    if k == 4:
         lines.append(line)
         line = ""
     else:
